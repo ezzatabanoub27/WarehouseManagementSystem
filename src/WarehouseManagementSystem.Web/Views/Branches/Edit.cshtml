@@ -1,0 +1,383 @@
+﻿@model WarehouseManagementSystem.Application.DTOs.Branches.UpdateBranchDto
+
+@{
+    ViewData["Title"] = "Edit Branch";
+    var companies = ViewBag.Companies
+        as IEnumerable<WarehouseManagementSystem.Application.DTOs.Companies.CompanyDto>;
+}
+
+<div class="mx-auto max-w-6xl space-y-6">
+
+    <!-- Breadcrumb -->
+    <nav class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+        <a asp-action="Index" class="transition hover:text-blue-600">Branches</a>
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 18 6-6-6-6" />
+        </svg>
+        <span class="font-medium text-slate-800 dark:text-slate-200">Edit Branch</span>
+    </nav>
+
+    <!-- Header -->
+    <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+        <div class="flex items-center gap-4">
+            <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl
+                        bg-gradient-to-br from-amber-400 to-amber-600 text-white shadow-lg shadow-amber-500/25">
+                <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+            </div>
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Edit Branch</h1>
+                <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Update the branch information.</p>
+            </div>
+        </div>
+
+        <a asp-action="Index"
+           class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200
+                  bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50
+                  dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800">
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+            Back to Branches
+        </a>
+    </div>
+
+    <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+
+        <!-- Edit Form -->
+        <div class="lg:col-span-2">
+            <form asp-action="Edit" method="post" id="branchForm" class="dashboard-card overflow-hidden">
+
+                @Html.AntiForgeryToken()
+
+                <div asp-validation-summary="ModelOnly"
+                     class="mx-6 mt-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-600
+                            dark:border-red-900 dark:bg-red-500/10 dark:text-red-400"></div>
+
+                <!-- Section 1: Company -->
+                <section class="px-6 py-6">
+                    <div class="mb-5 flex items-center gap-3">
+                        <span class="flex h-7 w-7 items-center justify-center rounded-full bg-amber-500
+                                     text-xs font-bold text-white">1</span>
+                        <div>
+                            <h2 class="font-semibold text-slate-900 dark:text-white">Company</h2>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">The company this branch belongs to.</p>
+                        </div>
+                    </div>
+
+                    <label asp-for="CompanyId"
+                           class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-200">
+                        Company <span class="text-red-500">*</span>
+                    </label>
+                    <div class="relative">
+                        <svg class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
+                             fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                  d="M3 21h18M5 21V5a2 2 0 012-2h6a2 2 0 012 2v16M15 9h4a2 2 0 012 2v10M9 7h2M9 11h2M9 15h2" />
+                        </svg>
+                        <select asp-for="CompanyId" class="dashboard-input pl-10">
+                            @if (companies != null)
+                            {
+                                foreach (var company in companies)
+                                {
+                                    <option value="@company.Id" selected="@(Model?.CompanyId == company.Id)">
+                                        @company.Name (@company.Code)
+                                    </option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <span asp-validation-for="CompanyId" class="mt-1.5 block text-xs text-red-500"></span>
+                </section>
+
+                <div class="border-t border-slate-100 dark:border-slate-800"></div>
+
+                <!-- Section 2: Branch details -->
+                <section class="px-6 py-6">
+                    <div class="mb-5 flex items-center gap-3">
+                        <span class="flex h-7 w-7 items-center justify-center rounded-full bg-amber-500
+                                     text-xs font-bold text-white">2</span>
+                        <div>
+                            <h2 class="font-semibold text-slate-900 dark:text-white">Branch details</h2>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Name and unique code of the branch.</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+
+                        <div class="sm:col-span-2">
+                            <label asp-for="Name"
+                                   class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-200">
+                                Branch Name <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <svg class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
+                                     fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                          d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                                <input asp-for="Name" autocomplete="off" class="dashboard-input pl-10" />
+                            </div>
+                            <span asp-validation-for="Name" class="mt-1.5 block text-xs text-red-500"></span>
+                        </div>
+
+                        <div>
+                            <label asp-for="Code"
+                                   class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-200">
+                                Branch Code <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <svg class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
+                                     fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                          d="M7 7h.01M7 3h5l9 9-9 9-9-9V7a4 4 0 014-4z" />
+                                </svg>
+                                <input asp-for="Code" autocomplete="off" class="dashboard-input pl-10 font-mono uppercase" />
+                            </div>
+                            <span asp-validation-for="Code" class="mt-1.5 block text-xs text-red-500"></span>
+                        </div>
+
+                    </div>
+                </section>
+
+                <div class="border-t border-slate-100 dark:border-slate-800"></div>
+
+                <!-- Section 3: Location -->
+                <section class="px-6 py-6">
+                    <div class="mb-5 flex items-center gap-3">
+                        <span class="flex h-7 w-7 items-center justify-center rounded-full bg-amber-500
+                                     text-xs font-bold text-white">3</span>
+                        <div>
+                            <h2 class="font-semibold text-slate-900 dark:text-white">Location</h2>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Where the branch is located.</p>
+                        </div>
+                    </div>
+
+                    <label asp-for="Address"
+                           class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-200">
+                        Address
+                    </label>
+                    <textarea asp-for="Address" rows="3" placeholder="Branch address"
+                              class="dashboard-input resize-none"></textarea>
+                    <span asp-validation-for="Address" class="mt-1.5 block text-xs text-red-500"></span>
+                </section>
+
+                <div class="border-t border-slate-100 dark:border-slate-800"></div>
+
+                <!-- Section 4: Status -->
+                <section class="px-6 py-6">
+                    <div class="mb-5 flex items-center gap-3">
+                        <span class="flex h-7 w-7 items-center justify-center rounded-full bg-amber-500
+                                     text-xs font-bold text-white">4</span>
+                        <div>
+                            <h2 class="font-semibold text-slate-900 dark:text-white">Status</h2>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Control whether this branch is active.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between gap-4 rounded-xl border border-slate-200 p-4
+                                dark:border-slate-700">
+                        <div>
+                            <p id="statusTitle" class="text-sm font-semibold text-slate-800 dark:text-white">
+                                Branch is active
+                            </p>
+                            <p id="statusHint" class="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                                Active branches can be selected across the system.
+                            </p>
+                        </div>
+
+                        <label class="relative inline-flex cursor-pointer items-center">
+                            <input asp-for="IsActive" type="checkbox" class="peer sr-only" />
+                            <div class="h-6 w-11 rounded-full bg-slate-300 transition peer-checked:bg-blue-600
+                                        peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-500/20
+                                        after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5
+                                        after:rounded-full after:border after:border-slate-300 after:bg-white
+                                        after:transition-all peer-checked:after:translate-x-full
+                                        peer-checked:after:border-white dark:bg-slate-700">
+                            </div>
+                        </label>
+                    </div>
+                </section>
+
+                <!-- Footer -->
+                <div class="flex flex-col-reverse gap-3 border-t border-slate-200 bg-slate-50/70 px-6 py-4
+                            sm:flex-row sm:items-center sm:justify-between
+                            dark:border-slate-800 dark:bg-slate-950/40">
+
+                    <p class="text-xs text-slate-500 dark:text-slate-400">
+                        <span class="text-red-500">*</span> Required fields
+                    </p>
+
+                    <div class="flex flex-col-reverse gap-3 sm:flex-row">
+                        <a asp-action="Index"
+                           class="inline-flex items-center justify-center rounded-xl border border-slate-200
+                                  bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 transition
+                                  hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900
+                                  dark:text-slate-200 dark:hover:bg-slate-800">
+                            Back
+                        </a>
+
+                        <button type="submit" id="submitBtn" class="dashboard-button-primary">
+                            <svg id="submitIcon" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            <svg id="submitSpinner" class="hidden h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                            </svg>
+                            <span id="submitText">Update Branch</span>
+                        </button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+
+        <!-- Side Panel -->
+        <div class="space-y-5">
+
+            <div class="dashboard-card overflow-hidden">
+                <div class="border-b border-slate-100 px-5 py-4 dark:border-slate-800">
+                    <h3 class="text-sm font-semibold text-slate-900 dark:text-white">Live preview</h3>
+                    <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
+                        How this branch will appear after saving.
+                    </p>
+                </div>
+
+                <div class="p-5">
+                    <div class="flex items-center gap-3">
+                        <div id="previewAvatar"
+                             class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-50
+                                    text-base font-bold text-blue-600 dark:bg-blue-500/10 dark:text-blue-400">
+                            B
+                        </div>
+                        <div class="min-w-0">
+                            <p id="previewName" class="truncate font-semibold text-slate-900 dark:text-white">Branch name</p>
+                            <span id="previewCode"
+                                  class="mt-1 inline-block rounded-lg bg-slate-100 px-2 py-0.5 font-mono text-xs
+                                         font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+                                CODE
+                            </span>
+                        </div>
+                    </div>
+
+                    <dl class="mt-5 space-y-3 text-sm">
+                        <div class="flex items-start justify-between gap-4">
+                            <dt class="text-slate-400">Company</dt>
+                            <dd id="previewCompany" class="text-right font-medium text-slate-700 dark:text-slate-200">—</dd>
+                        </div>
+                        <div class="flex items-start justify-between gap-4">
+                            <dt class="text-slate-400">Address</dt>
+                            <dd id="previewAddress" class="line-clamp-2 text-right text-slate-600 dark:text-slate-300">—</dd>
+                        </div>
+                        <div class="flex items-center justify-between gap-4">
+                            <dt class="text-slate-400">Status</dt>
+                            <dd>
+                                <span id="previewStatus"
+                                      class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold">
+                                    <span id="previewStatusDot" class="h-1.5 w-1.5 rounded-full"></span>
+                                    <span id="previewStatusText"></span>
+                                </span>
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+            </div>
+
+            <div class="dashboard-card p-5">
+                <h3 class="text-sm font-semibold text-slate-900 dark:text-white">Before you save</h3>
+                <ul class="mt-4 space-y-3 text-sm text-slate-500 dark:text-slate-400">
+                    <li class="flex items-start gap-2">
+                        <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-blue-500"></span>
+                        Verify the branch name and code.
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-blue-500"></span>
+                        Confirm the correct company assignment.
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-blue-500"></span>
+                        Review the active status before saving.
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById("branchForm");
+            const companySelect = document.getElementById("CompanyId");
+            const nameInput = document.getElementById("Name");
+            const codeInput = document.getElementById("Code");
+            const addressInput = document.getElementById("Address");
+            const activeInput = document.getElementById("IsActive");
+
+            const pAvatar = document.getElementById("previewAvatar");
+            const pName = document.getElementById("previewName");
+            const pCode = document.getElementById("previewCode");
+            const pCompany = document.getElementById("previewCompany");
+            const pAddress = document.getElementById("previewAddress");
+            const pStatus = document.getElementById("previewStatus");
+            const pStatusDot = document.getElementById("previewStatusDot");
+            const pStatusText = document.getElementById("previewStatusText");
+            const statusTitle = document.getElementById("statusTitle");
+            const statusHint = document.getElementById("statusHint");
+
+            const activeClasses = ["bg-emerald-50", "text-emerald-700", "dark:bg-emerald-500/10", "dark:text-emerald-400"];
+            const inactiveClasses = ["bg-slate-100", "text-slate-600", "dark:bg-slate-800", "dark:text-slate-400"];
+
+            function updatePreview() {
+                const name = nameInput.value.trim();
+                pAvatar.textContent = name ? name.charAt(0).toUpperCase() : "B";
+                pName.textContent = name || "Branch name";
+                pCode.textContent = codeInput.value.trim() || "CODE";
+
+                const opt = companySelect.options[companySelect.selectedIndex];
+                pCompany.textContent = opt && companySelect.value ? opt.text.trim() : "—";
+                pAddress.textContent = addressInput.value.trim() || "—";
+
+                const active = activeInput.checked;
+                activeClasses.forEach(c => pStatus.classList.toggle(c, active));
+                inactiveClasses.forEach(c => pStatus.classList.toggle(c, !active));
+                pStatusDot.classList.toggle("bg-emerald-500", active);
+                pStatusDot.classList.toggle("bg-slate-400", !active);
+                pStatusText.textContent = active ? "Active" : "Inactive";
+                statusTitle.textContent = active ? "Branch is active" : "Branch is inactive";
+                statusHint.textContent = active
+                    ? "Active branches can be selected across the system."
+                    : "Inactive branches cannot be selected for new records.";
+            }
+
+            codeInput.addEventListener("input", function () {
+                const pos = codeInput.selectionStart;
+                codeInput.value = codeInput.value.toUpperCase().replace(/\s+/g, "-");
+                codeInput.setSelectionRange(pos, pos);
+            });
+
+            [nameInput, codeInput, addressInput].forEach(el => el.addEventListener("input", updatePreview));
+            companySelect.addEventListener("change", updatePreview);
+            activeInput.addEventListener("change", updatePreview);
+            updatePreview();
+
+            form.addEventListener("submit", function () {
+                if (window.jQuery && window.jQuery(form).valid && !window.jQuery(form).valid()) {
+                    return;
+                }
+                const btn = document.getElementById("submitBtn");
+                document.getElementById("submitIcon").classList.add("hidden");
+                document.getElementById("submitSpinner").classList.remove("hidden");
+                document.getElementById("submitText").textContent = "Saving...";
+                setTimeout(() => btn.setAttribute("disabled", "disabled"), 0);
+            });
+        });
+    </script>
+}

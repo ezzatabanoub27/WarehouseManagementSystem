@@ -1,0 +1,438 @@
+﻿@model WarehouseManagementSystem.Application.DTOs.Locations.UpdateLocationDto
+@using WarehouseManagementSystem.Application.DTOs.Warehouses
+
+@{
+    ViewData["Title"] = "Edit Location";
+    var warehouses = ViewBag.Warehouses as IEnumerable<WarehouseDto>
+                     ?? Enumerable.Empty<WarehouseDto>();
+    var warehouseGroups = warehouses
+        .GroupBy(w => string.IsNullOrWhiteSpace(w.BranchName) ? "General" : w.BranchName)
+        .OrderBy(g => g.Key);
+}
+
+<div class="mx-auto max-w-6xl space-y-6">
+
+    <!-- Breadcrumb -->
+    <nav class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+        <a asp-action="Index" class="transition hover:text-blue-600">Locations</a>
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 18 6-6-6-6" />
+        </svg>
+        <span class="font-medium text-slate-800 dark:text-slate-200">Edit Location</span>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+        <div class="flex items-center gap-4">
+            <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl
+                        bg-gradient-to-br from-blue-500 to-blue-700 text-white shadow-lg shadow-blue-500/25">
+                <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                          d="M3 21V7l9-4 9 4v14M3 21h18M9 21v-6h6v6M7 10h.01M12 10h.01M17 10h.01" />
+                </svg>
+            </div>
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
+                    Edit Location
+                </h1>
+                <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                    Update location details and assign it to a warehouse.
+                </p>
+            </div>
+        </div>
+
+        <a asp-action="Index"
+           class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200
+                  bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50
+                  dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800">
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+            Back to Locations
+        </a>
+    </div>
+
+    <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+
+        <!-- Main Form -->
+        <div class="lg:col-span-2">
+            <form asp-action="Edit" method="post" id="editLocationForm"
+                  class="dashboard-card overflow-hidden">
+
+                @Html.AntiForgeryToken()
+                <input asp-for="Id" type="hidden" />
+
+                <div asp-validation-summary="ModelOnly"
+                     class="mx-6 mt-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-600
+                            dark:border-red-900 dark:bg-red-500/10 dark:text-red-400"></div>
+
+                <!-- Section 1: Basic details -->
+                <section class="px-6 py-6">
+                    <div class="mb-5 flex items-center gap-3">
+                        <span class="flex h-7 w-7 items-center justify-center rounded-full bg-blue-600
+                                     text-xs font-bold text-white">1</span>
+                        <div>
+                            <h2 class="font-semibold text-slate-900 dark:text-white">Basic details</h2>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">
+                                Name and unique code used across the system.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+
+                        <div>
+                            <label asp-for="Name"
+                                   class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-200">
+                                Location Name <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <svg class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
+                                     fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                          d="M3 10l9-7 9 7v10a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1V10z" />
+                                </svg>
+                                <input asp-for="Name" placeholder="e.g. Main Storage Area"
+                                       autocomplete="off" class="dashboard-input pl-10" />
+                            </div>
+                            <span asp-validation-for="Name" class="mt-1.5 block text-xs text-red-500"></span>
+                        </div>
+
+                        <div>
+                            <label asp-for="Code"
+                                   class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-200">
+                                Location Code <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <svg class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
+                                     fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                          d="M7 7h.01M7 3h5l9 9-9 9-9-9V7a4 4 0 014-4z" />
+                                </svg>
+                                <input asp-for="Code" placeholder="e.g. LOC-001"
+                                       autocomplete="off" class="dashboard-input pl-10 font-mono uppercase" />
+                            </div>
+                            <span asp-validation-for="Code" class="mt-1.5 block text-xs text-red-500"></span>
+                            <p class="mt-1.5 text-xs text-slate-400">Must be unique within the warehouse.</p>
+                        </div>
+
+                    </div>
+                </section>
+
+                <div class="border-t border-slate-100 dark:border-slate-800"></div>
+
+                <!-- Section 2: Warehouse -->
+                <section class="px-6 py-6">
+                    <div class="mb-5 flex items-center gap-3">
+                        <span class="flex h-7 w-7 items-center justify-center rounded-full bg-blue-600
+                                     text-xs font-bold text-white">2</span>
+                        <div>
+                            <h2 class="font-semibold text-slate-900 dark:text-white">Warehouse assignment</h2>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">
+                                Select the warehouse that owns this location.
+                            </p>
+                        </div>
+                    </div>
+
+                    <label asp-for="WarehouseId"
+                           class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-200">
+                        Warehouse <span class="text-red-500">*</span>
+                    </label>
+                    <div class="relative">
+                        <svg class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
+                             fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                  d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4M9 9v.01M9 12v.01M9 15v.01M9 18v.01" />
+                        </svg>
+                        <select asp-for="WarehouseId" class="dashboard-input pl-10">
+                            <option value="">Select a warehouse</option>
+                            @foreach (var group in warehouseGroups)
+                            {
+                                <optgroup label="@group.Key">
+                                    @foreach (var warehouse in group)
+                                    {
+                                        <option value="@warehouse.Id" selected="@(Model.WarehouseId == warehouse.Id)">
+                                            @warehouse.Name
+                                        </option>
+                                    }
+                                </optgroup>
+                            }
+                        </select>
+                    </div>
+                    <span asp-validation-for="WarehouseId" class="mt-1.5 block text-xs text-red-500"></span>
+                </section>
+
+                <div class="border-t border-slate-100 dark:border-slate-800"></div>
+
+                <!-- Section 3: Type & Status -->
+                <section class="px-6 py-6">
+                    <div class="mb-5 flex items-center gap-3">
+                        <span class="flex h-7 w-7 items-center justify-center rounded-full bg-blue-600
+                                     text-xs font-bold text-white">3</span>
+                        <div>
+                            <h2 class="font-semibold text-slate-900 dark:text-white">Type &amp; status</h2>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">
+                                Operational role and availability of this location.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                        <div>
+                            <label asp-for="LocationType"
+                                   class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-200">
+                                Location Type <span class="text-red-500">*</span>
+                            </label>
+                            <select asp-for="LocationType"
+                                    asp-items="Html.GetEnumSelectList<WarehouseManagementSystem.Domain.Enums.LocationType>()"
+                                    class="dashboard-input">
+                                <option value="">Select a location type</option>
+                            </select>
+                            <span asp-validation-for="LocationType" class="mt-1.5 block text-xs text-red-500"></span>
+                        </div>
+
+                        <div>
+                            <span class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-200">
+                                Status
+                            </span>
+                            <label class="mt-2 inline-flex cursor-pointer items-center">
+                                <input asp-for="IsActive" type="checkbox" class="peer sr-only" />
+                                <div class="relative h-6 w-11 rounded-full bg-slate-300 transition
+                                            peer-checked:bg-emerald-500
+                                            peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-500/20
+                                            dark:bg-slate-700
+                                            after:absolute after:left-[2px] after:top-[2px]
+                                            after:h-5 after:w-5 after:rounded-full after:border
+                                            after:border-slate-300 after:bg-white after:transition-all
+                                            peer-checked:after:translate-x-full peer-checked:after:border-white">
+                                </div>
+                                <span id="statusLabel" class="ml-3 text-sm font-semibold text-slate-700 dark:text-slate-200">
+                                    @(Model.IsActive ? "Active" : "Inactive")
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Footer -->
+                <div class="flex flex-col-reverse gap-3 border-t border-slate-200 bg-slate-50/70 px-6 py-4
+                            sm:flex-row sm:items-center sm:justify-between
+                            dark:border-slate-800 dark:bg-slate-950/40">
+
+                    <p class="text-xs text-slate-500 dark:text-slate-400">
+                        <span class="text-red-500">*</span> Required fields
+                    </p>
+
+                    <div class="flex flex-col-reverse gap-3 sm:flex-row">
+                        <a asp-action="Index"
+                           class="inline-flex items-center justify-center rounded-xl border border-slate-200
+                                  bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 transition
+                                  hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900
+                                  dark:text-slate-200 dark:hover:bg-slate-800">
+                            Cancel
+                        </a>
+
+                        <button type="submit" id="submitBtn" class="dashboard-button-primary">
+                            <svg id="submitIcon" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            <svg id="submitSpinner" class="hidden h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                            </svg>
+                            <span id="submitText">Save Changes</span>
+                        </button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+
+        <!-- Side Panel -->
+        <div class="space-y-5">
+
+            <!-- Live Preview -->
+            <div class="dashboard-card overflow-hidden">
+                <div class="border-b border-slate-100 px-5 py-4 dark:border-slate-800">
+                    <h3 class="text-sm font-semibold text-slate-900 dark:text-white">Live preview</h3>
+                    <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
+                        How this location will appear in the list.
+                    </p>
+                </div>
+
+                <div class="p-5">
+                    <div class="flex items-center gap-3">
+                        <div id="previewAvatar"
+                             class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-50
+                                    text-base font-bold text-blue-600 dark:bg-blue-500/10 dark:text-blue-400">
+                            @(string.IsNullOrWhiteSpace(Model.Name) ? "L" : Model.Name.Trim().Substring(0, 1).ToUpperInvariant())
+                        </div>
+                        <div class="min-w-0">
+                            <p id="previewName"
+                               class="truncate font-semibold text-slate-900 dark:text-white">
+                                @(string.IsNullOrWhiteSpace(Model.Name) ? "Location name" : Model.Name)
+                            </p>
+                            <span id="previewCode"
+                                  class="mt-1 inline-block rounded-lg bg-slate-100 px-2 py-0.5 font-mono text-xs
+                                         font-medium text-slate-500 dark:bg-slate-800 dark:text-slate-400">
+                                @(string.IsNullOrWhiteSpace(Model.Code) ? "CODE" : Model.Code)
+                            </span>
+                        </div>
+                    </div>
+
+                    <dl class="mt-5 space-y-3 text-sm">
+                        <div class="flex items-start justify-between gap-4">
+                            <dt class="text-slate-400">Warehouse</dt>
+                            <dd id="previewWarehouse"
+                                class="text-right font-medium text-slate-900 dark:text-white">
+                                @(warehouses.FirstOrDefault(w => w.Id == Model.WarehouseId)?.Name ?? "Not selected")
+                            </dd>
+                        </div>
+                        <div class="flex items-start justify-between gap-4">
+                            <dt class="text-slate-400">Type</dt>
+                            <dd id="previewType"
+                                class="text-right font-medium text-slate-900 dark:text-white">
+                                @Model.LocationType
+                            </dd>
+                        </div>
+                        <div class="flex items-center justify-between gap-4">
+                            <dt class="text-slate-400">Status</dt>
+                            <dd id="previewStatus">
+                                @if (Model.IsActive)
+                                {
+                                    <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1
+                                                     text-xs font-semibold text-emerald-700
+                                                     dark:bg-emerald-500/10 dark:text-emerald-400">
+                                        <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                                        Active
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1
+                                                     text-xs font-semibold text-slate-600
+                                                     dark:bg-slate-800 dark:text-slate-400">
+                                        <span class="h-1.5 w-1.5 rounded-full bg-slate-400"></span>
+                                        Inactive
+                                    </span>
+                                }
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+            </div>
+
+            <!-- Notes -->
+            <div class="dashboard-card p-5">
+                <h3 class="text-sm font-semibold text-slate-900 dark:text-white">Good to know</h3>
+
+                <ul class="mt-4 space-y-3 text-sm text-slate-500 dark:text-slate-400">
+                    <li class="flex items-start gap-2">
+                        <svg class="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m5 12 4 4L19 6" />
+                        </svg>
+                        Each location belongs to one warehouse.
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <svg class="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m5 12 4 4L19 6" />
+                        </svg>
+                        Location code must be unique within its warehouse.
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <svg class="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m5 12 4 4L19 6" />
+                        </svg>
+                        Changing warehouse on a location with stock is validated on save.
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById("editLocationForm");
+            const nameInput = document.getElementById("Name");
+            const codeInput = document.getElementById("Code");
+            const warehouseSelect = document.getElementById("WarehouseId");
+            const typeSelect = document.getElementById("LocationType");
+            const activeInput = document.getElementById("IsActive");
+
+            const pAvatar = document.getElementById("previewAvatar");
+            const pName = document.getElementById("previewName");
+            const pCode = document.getElementById("previewCode");
+            const pWarehouse = document.getElementById("previewWarehouse");
+            const pType = document.getElementById("previewType");
+            const pStatus = document.getElementById("previewStatus");
+            const statusLabel = document.getElementById("statusLabel");
+
+            const muted = ["text-slate-400", "dark:text-slate-500"];
+            const filled = ["text-slate-900", "dark:text-white"];
+
+            function setFilled(el, hasValue) {
+                muted.forEach(c => el.classList.toggle(c, !hasValue));
+                filled.forEach(c => el.classList.toggle(c, hasValue));
+            }
+
+            function updatePreview() {
+                const name = nameInput.value.trim();
+                const code = codeInput.value.trim();
+                const typeText = typeSelect.value
+                    ? typeSelect.options[typeSelect.selectedIndex].text.trim()
+                    : "";
+                const warehouseText = warehouseSelect.value
+                    ? warehouseSelect.options[warehouseSelect.selectedIndex].text.trim()
+                    : "";
+                const branchText = warehouseSelect.value
+                    ? warehouseSelect.options[warehouseSelect.selectedIndex].parentElement.label
+                    : "";
+
+                pAvatar.textContent = name ? name.charAt(0).toUpperCase() : "L";
+                pName.textContent = name || "Location name";
+                setFilled(pName, !!name);
+
+                pCode.textContent = code || "CODE";
+                pWarehouse.textContent = warehouseText
+                    ? (branchText ? branchText + " - " + warehouseText : warehouseText)
+                    : "Not selected";
+                setFilled(pWarehouse, !!warehouseText);
+
+                pType.textContent = typeText || "Not selected";
+                setFilled(pType, !!typeText);
+
+                const isActive = !!activeInput?.checked;
+                statusLabel.textContent = isActive ? "Active" : "Inactive";
+                pStatus.innerHTML = isActive
+                    ? `<span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400"><span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>Active</span>`
+                    : `<span class="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-600 dark:bg-slate-800 dark:text-slate-400"><span class="h-1.5 w-1.5 rounded-full bg-slate-400"></span>Inactive</span>`;
+            }
+
+            codeInput.addEventListener("input", function () {
+                const pos = codeInput.selectionStart;
+                codeInput.value = codeInput.value.toUpperCase().replace(/\s+/g, "-");
+                codeInput.setSelectionRange(pos, pos);
+            });
+
+            [nameInput, codeInput].forEach(el => el.addEventListener("input", updatePreview));
+            [warehouseSelect, typeSelect, activeInput].forEach(el => el?.addEventListener("change", updatePreview));
+            updatePreview();
+
+            form.addEventListener("submit", function () {
+                if (window.jQuery && window.jQuery(form).valid && !window.jQuery(form).valid()) {
+                    return;
+                }
+                const btn = document.getElementById("submitBtn");
+                document.getElementById("submitIcon").classList.add("hidden");
+                document.getElementById("submitSpinner").classList.remove("hidden");
+                document.getElementById("submitText").textContent = "Saving...";
+                setTimeout(() => btn.setAttribute("disabled", "disabled"), 0);
+            });
+        });
+    </script>
+}

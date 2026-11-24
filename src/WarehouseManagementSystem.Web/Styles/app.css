@@ -1,0 +1,50 @@
+﻿
+@import "tailwindcss";
+
+@source "../Views/**/*.cshtml";
+@source "../wwwroot/js/**/*.js";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+    --font-sans: "Inter", "Segoe UI", sans-serif;
+    --color-brand-50: #eff6ff;
+    --color-brand-100: #dbeafe;
+    --color-brand-500: #3b82f6;
+    --color-brand-600: #2563eb;
+    --color-brand-700: #1d4ed8;
+    --color-brand-900: #1e3a8a;
+}
+
+@layer base {
+    html {
+        font-family: var(--font-sans);
+    }
+
+    body {
+        @apply antialiased;
+    }
+
+    button, a {
+        -webkit-tap-highlight-color: transparent;
+    }
+    svg {
+        width: 1.25rem;
+        height: 1.25rem;
+        flex-shrink: 0;
+    }
+}
+
+@layer components {
+    .dashboard-card {
+        @apply rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900;
+    }
+
+    .dashboard-input {
+        @apply w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:placeholder:text-slate-500;
+    }
+
+    .dashboard-button-primary {
+        @apply inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500/20;
+    }
+}

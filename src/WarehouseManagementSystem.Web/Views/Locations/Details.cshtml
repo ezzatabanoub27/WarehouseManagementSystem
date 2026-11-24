@@ -1,0 +1,187 @@
+﻿@model WarehouseManagementSystem.Application.DTOs.Locations.LocationDto
+
+@{
+    ViewData["Title"] = "Location Details";
+    var avatar = string.IsNullOrWhiteSpace(Model.Name)
+        ? "L"
+        : Model.Name.Trim().Substring(0, 1).ToUpperInvariant();
+}
+
+<div class="mx-auto max-w-6xl space-y-6">
+
+    <!-- Breadcrumb -->
+    <nav class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+        <a asp-action="Index" class="transition hover:text-blue-600">Locations</a>
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 18 6-6-6-6" />
+        </svg>
+        <span class="font-medium text-slate-800 dark:text-slate-200">@Model.Name</span>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+        <div class="flex items-center gap-4">
+            <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl
+                        bg-gradient-to-br from-blue-500 to-blue-700 text-white shadow-lg shadow-blue-500/25">
+                <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                          d="M3 21V7l9-4 9 4v14M3 21h18M9 21v-6h6v6M7 10h.01M12 10h.01M17 10h.01" />
+                </svg>
+            </div>
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
+                    @Model.Name
+                </h1>
+                <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                    Location details, warehouse assignment, and status.
+                </p>
+            </div>
+        </div>
+
+        <div class="flex flex-wrap gap-3">
+            <a asp-action="Index"
+               class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200
+                      bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50
+                      dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800">
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+                Back to Locations
+            </a>
+
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="dashboard-button-primary">
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828z" />
+                </svg>
+                Edit Location
+            </a>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+
+        <!-- Main Card -->
+        <div class="lg:col-span-2">
+            <div class="dashboard-card overflow-hidden">
+
+                <!-- Header -->
+                <div class="flex flex-col justify-between gap-4 border-b border-slate-100 px-6 py-5 sm:flex-row sm:items-center dark:border-slate-800">
+                    <div class="flex items-center gap-3">
+                        <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-50
+                                    text-base font-bold text-blue-600 dark:bg-blue-500/10 dark:text-blue-400">
+                            @avatar
+                        </div>
+                        <div>
+                            <h2 class="font-semibold text-slate-900 dark:text-white">@Model.Name</h2>
+                            <span class="mt-1 inline-block rounded-lg bg-slate-100 px-2 py-0.5 font-mono text-xs
+                                         font-medium text-slate-500 dark:bg-slate-800 dark:text-slate-400">
+                                @Model.Code
+                            </span>
+                        </div>
+                    </div>
+
+                    @if (Model.IsActive)
+                    {
+                        <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1
+                                         text-xs font-semibold text-emerald-700
+                                         dark:bg-emerald-500/10 dark:text-emerald-400">
+                            <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                            Active
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1
+                                         text-xs font-semibold text-slate-600
+                                         dark:bg-slate-800 dark:text-slate-400">
+                            <span class="h-1.5 w-1.5 rounded-full bg-slate-400"></span>
+                            Inactive
+                        </span>
+                    }
+                </div>
+
+                <!-- Details -->
+                <dl class="grid grid-cols-1 gap-5 px-6 py-6 sm:grid-cols-2">
+                    <div>
+                        <dt class="text-xs font-medium text-slate-400">Location Code</dt>
+                        <dd class="mt-1.5 font-mono text-sm font-semibold text-slate-900 dark:text-white">
+                            @Model.Code
+                        </dd>
+                    </div>
+
+                    <div>
+                        <dt class="text-xs font-medium text-slate-400">Location Type</dt>
+                        <dd class="mt-1.5 text-sm font-semibold text-slate-900 dark:text-white">
+                            @Model.LocationType
+                        </dd>
+                    </div>
+
+                    <div>
+                        <dt class="text-xs font-medium text-slate-400">Created At</dt>
+                        <dd class="mt-1.5 text-sm font-medium text-slate-700 dark:text-slate-200">
+                            @Model.CreatedAtUtc.ToLocalTime().ToString("dd MMM yyyy, hh:mm tt")
+                        </dd>
+                    </div>
+
+                    <div>
+                        <dt class="text-xs font-medium text-slate-400">Location ID</dt>
+                        <dd class="mt-1.5 break-all font-mono text-xs text-slate-500 dark:text-slate-400">
+                            @Model.Id
+                        </dd>
+                    </div>
+                </dl>
+
+                <!-- Footer -->
+                <div class="flex flex-col-reverse gap-3 border-t border-slate-200 bg-slate-50/70 px-6 py-4
+                            sm:flex-row sm:items-center sm:justify-between
+                            dark:border-slate-800 dark:bg-slate-950/40">
+                    <p class="text-xs text-slate-500 dark:text-slate-400">
+                        Warehouse: <span class="font-semibold text-slate-700 dark:text-slate-300">@Model.WarehouseName</span>
+                    </p>
+
+                    <div class="flex flex-col-reverse gap-3 sm:flex-row">
+                        <a asp-action="Create"
+                           class="inline-flex items-center justify-center rounded-xl border border-slate-200
+                                  bg-white px-4 py-2 text-xs font-semibold text-slate-700 transition
+                                  hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900
+                                  dark:text-slate-200 dark:hover:bg-slate-800">
+                            Create Another
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Side Panel -->
+        <div class="space-y-5">
+            <div class="dashboard-card overflow-hidden">
+                <div class="border-b border-slate-100 px-5 py-4 dark:border-slate-800">
+                    <h3 class="text-sm font-semibold text-slate-900 dark:text-white">Hierarchy</h3>
+                    <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
+                        Organization structure for this location.
+                    </p>
+                </div>
+
+                <div class="p-5">
+                    <dl class="space-y-3 text-sm">
+                        <div class="flex items-start justify-between gap-4">
+                            <dt class="text-slate-400">Company</dt>
+                            <dd class="text-right font-medium text-slate-900 dark:text-white">@Model.CompanyName</dd>
+                        </div>
+                        <div class="flex items-start justify-between gap-4">
+                            <dt class="text-slate-400">Branch</dt>
+                            <dd class="text-right font-medium text-slate-900 dark:text-white">@Model.BranchName</dd>
+                        </div>
+                        <div class="flex items-start justify-between gap-4">
+                            <dt class="text-slate-400">Warehouse</dt>
+                            <dd class="text-right font-medium text-slate-900 dark:text-white">@Model.WarehouseName</dd>
+                        </div>
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,32 @@
+
+# Build results
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# User-specific files
+*.rsuser
+*.sln.ide
+
+# NuGet
+*.nupkg
+.nuget/
+
+# Logs
+*.log
+
+# Local configuration and secrets
+appsettings.Development.json
+appsettings.*.Local.json
+secrets.json
+
+# Node dependencies and build output
+node_modules/

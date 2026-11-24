@@ -1,0 +1,17 @@
+{
+  "name": "warehousemanagementsystem.web",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build:css": "npx @tailwindcss/cli -i ./Styles/app.css -o ./wwwroot/css/app.css",
+    "watch:css": "npx @tailwindcss/cli -i ./Styles/app.css -o ./wwwroot/css/app.css --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.5",
+    "tailwindcss": "^4.3.5"
+  }
+}

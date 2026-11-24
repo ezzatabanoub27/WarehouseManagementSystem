@@ -1,0 +1,168 @@
+﻿@model WarehouseManagementSystem.Application.DTOs.Products.ProductDto
+
+@{
+    ViewData["Title"] = "Product Details";
+}
+
+<div class="max-w-5xl mx-auto space-y-6">
+
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">
+                Product Details
+            </h1>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                View product information.
+            </p>
+        </div>
+
+        <div class="flex gap-3">
+            <a asp-action="Index" class="dashboard-button-secondary">
+                Back
+            </a>
+            <a asp-action="Edit"
+               asp-route-id="@Model.Id"
+               class="dashboard-button-primary">
+                Edit Product
+            </a>
+        </div>
+    </div>
+
+    <div class="dashboard-card space-y-7">
+
+        <!-- Product Header -->
+        <div class="flex flex-col sm:flex-row gap-6">
+
+            <div class="w-36 h-36 rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-700 flex-shrink-0 flex items-center justify-center">
+                @if (!string.IsNullOrWhiteSpace(Model.ImagePath))
+                {
+                    <img src="@Model.ImagePath"
+                         alt="@Model.Name"
+                         class="w-full h-full object-cover" />
+                }
+                else
+                {
+                    <span class="text-sm text-gray-400">
+                        No Image
+                    </span>
+                }
+            </div>
+
+            <div class="flex-1">
+                <div class="flex flex-wrap items-center gap-3">
+                    <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
+                        @Model.Name
+                    </h2>
+
+                    @if (Model.IsActive)
+                    {
+                        <span class="px-2.5 py-1 rounded-full text-xs bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400">
+                            Active
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="px-2.5 py-1 rounded-full text-xs bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300">
+                            Inactive
+                        </span>
+                    }
+                </div>
+
+                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                    SKU: @Model.SKU
+                </p>
+
+                @if (!string.IsNullOrWhiteSpace(Model.Barcode))
+                {
+                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                        Barcode: @Model.Barcode
+                    </p>
+                }
+            </div>
+
+        </div>
+
+        <div class="border-t border-gray-200 dark:border-gray-700"></div>
+
+        <!-- Basic Information -->
+        <section class="space-y-4">
+            <h3 class="font-semibold text-gray-900 dark:text-white">
+                Basic Information
+            </h3>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+
+                <div>
+                    <p class="text-xs text-gray-500">Category</p>
+                    <p class="mt-1 text-sm font-medium text-gray-900 dark:text-white">
+                        @Model.CategoryName
+                    </p>
+                </div>
+
+                <div>
+                    <p class="text-xs text-gray-500">Base Unit</p>
+                    <p class="mt-1 text-sm font-medium text-gray-900 dark:text-white">
+                        @if (!string.IsNullOrWhiteSpace(Model.UnitName))
+                        {
+                            @Model.UnitName <text>(@Model.UnitSymbol)</text>
+                        }
+                        else
+                        {
+                            <span class="text-gray-400">Not assigned</span>
+                        }
+                    </p>
+                </div>
+
+                <div>
+                    <p class="text-xs text-gray-500">Tracking Mode</p>
+                    <p class="mt-1 text-sm font-medium text-gray-900 dark:text-white">
+                        @Model.TrackingMode
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="border-t border-gray-200 dark:border-gray-700"></div>
+
+        <!-- Pricing -->
+        <section class="space-y-4">
+            <h3 class="font-semibold text-gray-900 dark:text-white">
+                Pricing
+            </h3>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+
+                <div>
+                    <p class="text-xs text-gray-500">Cost Price</p>
+                    <p class="mt-1 text-lg font-semibold text-gray-900 dark:text-white">
+                        @Model.CostPrice.ToString("N2")
+                    </p>
+                </div>
+
+                <div>
+                    <p class="text-xs text-gray-500">Selling Price</p>
+                    <p class="mt-1 text-lg font-semibold text-gray-900 dark:text-white">
+                        @Model.SellingPrice.ToString("N2")
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+        @if (!string.IsNullOrWhiteSpace(Model.Description))
+        {
+            <div class="border-t border-gray-200 dark:border-gray-700"></div>
+
+            <section>
+                <h3 class="font-semibold text-gray-900 dark:text-white mb-3">
+                    Description
+                </h3>
+                <p class="text-sm text-gray-600 dark:text-gray-300 whitespace-pre-line">
+                    @Model.Description
+                </p>
+            </section>
+        }
+
+    </div>
+</div>

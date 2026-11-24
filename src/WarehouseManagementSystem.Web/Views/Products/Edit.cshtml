@@ -1,0 +1,237 @@
+﻿@model WarehouseManagementSystem.Application.DTOs.Products.UpdateProductDto
+@using WarehouseManagementSystem.Domain.Enums
+
+@{
+    ViewData["Title"] = "Edit Product";
+    var currentImage = ViewBag.CurrentImage as string;
+}
+
+<div class="max-w-5xl mx-auto space-y-6">
+
+    <div>
+        <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">
+            Edit Product
+        </h1>
+        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+            Update product information and image.
+        </p>
+    </div>
+
+    <form asp-action="Edit"
+          method="post"
+          enctype="multipart/form-data"
+          class="dashboard-card space-y-8">
+
+        <input type="hidden" asp-for="Id" />
+
+        <div asp-validation-summary="ModelOnly"
+             class="text-sm text-red-500"></div>
+
+        <!-- Product Image -->
+        <section class="space-y-4">
+            <h2 class="text-base font-semibold text-gray-900 dark:text-white">
+                Product Image
+            </h2>
+
+            <div class="flex flex-col sm:flex-row items-start gap-5">
+
+                <div class="w-32 h-32 rounded-xl border border-dashed border-gray-300 dark:border-gray-600 overflow-hidden flex items-center justify-center bg-gray-50 dark:bg-gray-800">
+
+                    <img id="imagePreview"
+                         src="@(string.IsNullOrWhiteSpace(currentImage) ? "" : currentImage)"
+                         alt="Product image"
+                         class="@(string.IsNullOrWhiteSpace(currentImage) ? "hidden" : "") w-full h-full object-cover" />
+
+                    <div id="imagePlaceholder"
+                         class="@(string.IsNullOrWhiteSpace(currentImage) ? "" : "hidden") text-center text-gray-400">
+                        <span class="text-3xl">+</span>
+                        <p class="text-xs mt-1">No image</p>
+                    </div>
+                </div>
+
+                <div class="flex-1 space-y-2">
+                    <label asp-for="Image" class="block text-sm font-medium">
+                        Change image
+                        <span class="text-gray-400 font-normal">(Optional)</span>
+                    </label>
+
+                    <input asp-for="Image"
+                           type="file"
+                           accept=".jpg,.jpeg,.png,.webp"
+                           id="productImage"
+                           class="dashboard-input" />
+
+                    <span asp-validation-for="Image" class="text-sm text-red-500"></span>
+
+                    <p class="text-xs text-gray-500 dark:text-gray-400">
+                        Leave empty to keep the current image. JPG, PNG or WEBP, maximum 5 MB.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <div class="border-t border-gray-200 dark:border-gray-700"></div>
+
+        <!-- Basic Information -->
+        <section class="space-y-4">
+            <h2 class="text-base font-semibold text-gray-900 dark:text-white">
+                Basic Information
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+                <div>
+                    <label asp-for="Name" class="block text-sm font-medium mb-2">
+                        Product Name
+                    </label>
+                    <input asp-for="Name" class="dashboard-input" />
+                    <span asp-validation-for="Name" class="text-sm text-red-500"></span>
+                </div>
+
+                <div>
+                    <label asp-for="SKU" class="block text-sm font-medium mb-2">
+                        SKU
+                    </label>
+                    <input asp-for="SKU" class="dashboard-input" />
+                    <span asp-validation-for="SKU" class="text-sm text-red-500"></span>
+                </div>
+
+                <div>
+                    <label asp-for="Barcode" class="block text-sm font-medium mb-2">
+                        Barcode
+                    </label>
+                    <input asp-for="Barcode" class="dashboard-input" />
+                    <span asp-validation-for="Barcode" class="text-sm text-red-500"></span>
+                </div>
+
+                <div>
+                    <label asp-for="CategoryId" class="block text-sm font-medium mb-2">
+                        Category
+                    </label>
+                    <select asp-for="CategoryId"
+                            asp-items="ViewBag.Categories"
+                            class="dashboard-input">
+                        <option value="">Select category</option>
+                    </select>
+                    <span asp-validation-for="CategoryId" class="text-sm text-red-500"></span>
+                </div>
+
+                <div>
+                    <label asp-for="BaseUnitId" class="block text-sm font-medium mb-2">
+                        Base Unit
+                        <span class="text-gray-400 font-normal">(Optional)</span>
+                    </label>
+                    <select asp-for="BaseUnitId"
+                            asp-items="ViewBag.Units"
+                            class="dashboard-input">
+                        <option value="">No Unit</option>
+                    </select>
+                    <span asp-validation-for="BaseUnitId" class="text-sm text-red-500"></span>
+                </div>
+
+                <div>
+                    <label asp-for="TrackingMode" class="block text-sm font-medium mb-2">
+                        Tracking Mode
+                    </label>
+                    <select asp-for="TrackingMode"
+                            asp-items="Html.GetEnumSelectList<ProductTrackingMode>()"
+                            class="dashboard-input">
+                    </select>
+                    <span asp-validation-for="TrackingMode" class="text-sm text-red-500"></span>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="border-t border-gray-200 dark:border-gray-700"></div>
+
+        <!-- Pricing -->
+        <section class="space-y-4">
+            <h2 class="text-base font-semibold text-gray-900 dark:text-white">
+                Pricing
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+                <div>
+                    <label asp-for="CostPrice" class="block text-sm font-medium mb-2">
+                        Cost Price
+                    </label>
+                    <input asp-for="CostPrice"
+                           type="number"
+                           step="0.0001"
+                           min="0"
+                           class="dashboard-input" />
+                    <span asp-validation-for="CostPrice" class="text-sm text-red-500"></span>
+                </div>
+
+                <div>
+                    <label asp-for="SellingPrice" class="block text-sm font-medium mb-2">
+                        Selling Price
+                    </label>
+                    <input asp-for="SellingPrice"
+                           type="number"
+                           step="0.0001"
+                           min="0"
+                           class="dashboard-input" />
+                    <span asp-validation-for="SellingPrice" class="text-sm text-red-500"></span>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="border-t border-gray-200 dark:border-gray-700"></div>
+
+        <!-- Description -->
+        <section>
+            <label asp-for="Description" class="block text-sm font-medium mb-2">
+                Description
+            </label>
+            <textarea asp-for="Description"
+                      rows="3"
+                      class="dashboard-input"></textarea>
+            <span asp-validation-for="Description" class="text-sm text-red-500"></span>
+        </section>
+
+        <!-- Status -->
+        <section class="flex items-center gap-3">
+            <input asp-for="IsActive"
+                   type="checkbox"
+                   class="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
+            <label asp-for="IsActive" class="text-sm font-medium">
+                Active Product
+            </label>
+        </section>
+
+        <!-- Actions -->
+        <div class="flex justify-end gap-3 pt-2">
+            <a asp-action="Index" class="dashboard-button-secondary">
+                Cancel
+            </a>
+            <button type="submit" class="dashboard-button-primary">
+                Save Changes
+            </button>
+        </div>
+
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        const imageInput = document.getElementById("productImage");
+        const imagePreview = document.getElementById("imagePreview");
+        const imagePlaceholder = document.getElementById("imagePlaceholder");
+
+        imageInput.addEventListener("change", function () {
+            const file = this.files[0];
+
+            if (!file) return;
+
+            imagePreview.src = URL.createObjectURL(file);
+            imagePreview.classList.remove("hidden");
+            imagePlaceholder.classList.add("hidden");
+        });
+    </script>
+}

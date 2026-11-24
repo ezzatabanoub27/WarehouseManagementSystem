@@ -1,0 +1,218 @@
+﻿@model IEnumerable<WarehouseManagementSystem.Application.DTOs.Categories.CategoryDto>
+
+@{
+    ViewData["Title"] = "Categories";
+    var categories = Model?.ToList() ?? new List<WarehouseManagementSystem.Application.DTOs.Categories.CategoryDto>();
+}
+
+<div class="mx-auto max-w-7xl space-y-10">
+
+    <!-- Header -->
+    <div class="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+            <h1 class="text-2xl font-semibold tracking-tight text-slate-900 dark:text-white">
+                Categories
+            </h1>
+            <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">
+                Manage and organize your product categories.
+            </p>
+        </div>
+
+        <a asp-action="Create"
+           class="dashboard-button-primary inline-flex items-center justify-center gap-2 !px-3 !py-2 !text-xs">
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M12 4v16m8-8H4" />
+            </svg>
+            Add Category
+        </a>
+    </div>
+
+    <!-- Search -->
+    <div class="flex items-center justify-between gap-4">
+        <div class="relative w-full max-w-sm">
+            <svg class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
+                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="7" stroke-width="2" />
+                <path stroke-linecap="round" stroke-width="2" d="m16 16 4 4" />
+            </svg>
+
+            <input id="categorySearch"
+                   type="text"
+                   placeholder="Search categories..."
+                   class="dashboard-input w-full !pl-10" />
+        </div>
+
+        <span id="categoryCount"
+              class="shrink-0 text-xs text-slate-500 dark:text-slate-400">
+            @categories.Count categories
+        </span>
+    </div>
+
+    <!-- Table -->
+    <div class="overflow-hidden rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+                <thead class="border-b border-slate-200 bg-slate-50/70 dark:border-slate-800 dark:bg-slate-800/40">
+                    <tr>
+                        <th class="px-6 py-4 font-medium text-slate-500 dark:text-slate-400">
+                            Category
+                        </th>
+                        <th class="px-6 py-4 font-medium text-slate-500 dark:text-slate-400">
+                            Parent
+                        </th>
+                        <th class="px-6 py-4 font-medium text-slate-500 dark:text-slate-400">
+                            Products
+                        </th>
+                        <th class="px-6 py-4 font-medium text-slate-500 dark:text-slate-400">
+                            Status
+                        </th>
+                        <th class="px-6 py-4 text-right font-medium text-slate-500 dark:text-slate-400">
+                            Actions
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody id="categoriesTable"
+                       class="divide-y divide-slate-100 dark:divide-slate-800">
+
+                    @foreach (var category in categories)
+                    {
+                        <tr class="category-row transition-colors hover:bg-slate-50/70 dark:hover:bg-slate-800/30"
+                            data-search="@($"{category.Name} {category.ParentCategoryName}")">
+
+                            <td class="px-6 py-5">
+                                <div class="font-medium text-slate-900 dark:text-white">
+                                    @category.Name
+                                </div>
+
+                                @if (category.SubCategoriesCount > 0)
+                                {
+                                    <div class="mt-1 text-xs text-slate-400">
+                                        @category.SubCategoriesCount subcategories
+                                    </div>
+                                }
+                            </td>
+
+                            <td class="px-6 py-5 text-slate-500 dark:text-slate-400">
+                                @(category.ParentCategoryName ?? "—")
+                            </td>
+
+                            <td class="px-6 py-5 text-slate-600 dark:text-slate-300">
+                                @category.ProductsCount
+                            </td>
+
+                            <td class="px-6 py-5">
+                                @if (category.IsActive)
+                                {
+                                    <span class="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-600 dark:text-emerald-400">
+                                        <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                                        Active
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="inline-flex items-center gap-1.5 text-xs font-medium text-slate-500 dark:text-slate-400">
+                                        <span class="h-1.5 w-1.5 rounded-full bg-slate-400"></span>
+                                        Inactive
+                                    </span>
+                                }
+                            </td>
+
+                            <td class="px-6 py-5">
+                                <div class="flex items-center justify-end gap-3 text-xs font-medium">
+                                    <a asp-action="Details"
+                                       asp-route-id="@category.Id"
+                                       class="text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400">
+                                        View
+                                    </a>
+
+                                    <a asp-action="Edit"
+                                       asp-route-id="@category.Id"
+                                       class="text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400">
+                                        Edit
+                                    </a>
+
+                                    <form asp-action="Delete"
+                                          asp-route-id="@category.Id"
+                                          method="post"
+                                          class="delete-category-form"
+                                          data-category-name="@category.Name">
+                                        @Html.AntiForgeryToken()
+
+                                        <button type="button"
+                                                onclick="confirmCategoryDelete(this)"
+                                                class="text-slate-500 hover:text-red-600 dark:text-slate-400 dark:hover:text-red-400">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+
+                    <tr id="emptySearchResult" class="hidden">
+                        <td colspan="5" class="px-6 py-12 text-center text-sm text-slate-400">
+                            No categories found.
+                        </td>
+                    </tr>
+
+                    @if (!categories.Any())
+                    {
+                        <tr>
+                            <td colspan="5" class="px-6 py-16 text-center">
+                                <p class="text-sm font-medium text-slate-700 dark:text-slate-200">
+                                    No categories yet
+                                </p>
+                                <p class="mt-2 text-xs text-slate-400">
+                                    Create your first category to get started.
+                                </p>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const searchInput = document.getElementById('categorySearch');
+        const rows = [...document.querySelectorAll('.category-row')];
+        const countElement = document.getElementById('categoryCount');
+        const emptyResult = document.getElementById('emptySearchResult');
+
+        searchInput?.addEventListener('input', function () {
+            const search = this.value.trim().toLowerCase();
+            let visibleCount = 0;
+
+            rows.forEach(row => {
+                const matches = row.dataset.search.toLowerCase().includes(search);
+                row.classList.toggle('hidden', !matches);
+
+                if (matches) visibleCount++;
+            });
+
+            if (countElement) {
+                countElement.textContent = `${visibleCount} categories`;
+            }
+
+            emptyResult?.classList.toggle('hidden', visibleCount !== 0);
+        });
+
+        function confirmCategoryDelete(button) {
+            const form = button.closest('form');
+            const categoryName = form.dataset.categoryName;
+
+            window.confirmAction({
+                title: 'Delete Category?',
+                message: `Are you sure you want to delete "${categoryName}"?`,
+                confirmText: 'Delete',
+                type: 'danger',
+                onConfirm: () => form.requestSubmit()
+            });
+        }
+    </script>
+}

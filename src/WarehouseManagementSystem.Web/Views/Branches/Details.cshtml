@@ -1,0 +1,105 @@
+﻿@model WarehouseManagementSystem.Application.DTOs.Branches.BranchDto
+
+@{
+    ViewData["Title"] = "Branch Details";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-7">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body p-4 border-bottom d-flex align-items-center justify-content-between">
+
+                    <div class="d-flex align-items-center">
+                        <div class="rounded-circle bg-primary-subtle text-primary fw-bold fs-4 d-flex align-items-center justify-content-center me-3"
+                             style="width:56px;height:56px;">
+                            @(string.IsNullOrEmpty(Model.Name)
+                                                        ? "?"
+                                                        : Model.Name[0].ToString().ToUpper())
+                        </div>
+
+                        <div>
+                            <h4 class="mb-0 fw-semibold">@Model.Name</h4>
+                            <span class="text-muted font-monospace small">
+                                @Model.Code
+                            </span>
+                        </div>
+                    </div>
+
+                    @if (Model.IsActive)
+                    {
+                        <span class="badge rounded-pill bg-success-subtle text-success-emphasis px-3 py-2">
+                            Active
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge rounded-pill bg-secondary-subtle text-secondary-emphasis px-3 py-2">
+                            Inactive
+                        </span>
+                    }
+
+                </div>
+
+                <div class="card-body p-4">
+
+                    <dl class="row mb-0">
+
+                        <dt class="col-sm-4 text-muted fw-normal">
+                            Company
+                        </dt>
+                        <dd class="col-sm-8 fw-medium">
+                            @Model.CompanyName
+                        </dd>
+
+                        <dt class="col-sm-4 text-muted fw-normal">
+                            Branch Code
+                        </dt>
+                        <dd class="col-sm-8 fw-medium font-monospace">
+                            @Model.Code
+                        </dd>
+
+                        <dt class="col-sm-4 text-muted fw-normal">
+                            Address
+                        </dt>
+                        <dd class="col-sm-8 fw-medium">
+                            @(string.IsNullOrWhiteSpace(Model.Address)
+                                                        ? "—"
+                                                        : Model.Address)
+                        </dd>
+
+                        <dt class="col-sm-4 text-muted fw-normal">
+                            Created At
+                        </dt>
+                        <dd class="col-sm-8 fw-medium mb-0">
+                            @Model.CreatedAtUtc.ToString("yyyy-MM-dd HH:mm")
+                        </dd>
+
+                    </dl>
+
+                </div>
+
+                <div class="card-footer bg-transparent border-top-0 px-4 pb-4 d-flex justify-content-end gap-2">
+
+                    <a asp-action="Index"
+                       class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left me-1"></i>
+                        Back
+                    </a>
+
+                    <a asp-action="Edit"
+                       asp-route-id="@Model.Id"
+                       class="btn btn-warning">
+                        <i class="bi bi-pencil-square me-1"></i>
+                        Edit
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
